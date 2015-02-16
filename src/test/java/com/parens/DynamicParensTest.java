@@ -134,7 +134,7 @@ public class DynamicParensTest {
     }
 
     @Test
-    public void testCatalanOneHundred() throws IOException {
+    public void testCatalanOneHundred() {
         String inputString = "1";
         for (int i = 1; i <= 100; i++) {
             inputString += "a1";
@@ -154,11 +154,10 @@ public class DynamicParensTest {
      * roughly 150-180 seconds to finish. Forcing 64-bit mode through command
      * line or in a 64-bit IDE reduces runtime marginally.
      * 
-     * @throws IOException
      */
     @Ignore
     @Test
-    public void testCatalanOneThousand() throws IOException {
+    public void testCatalanOneThousand() {
 
         String inputString = "1";
 
@@ -183,7 +182,7 @@ public class DynamicParensTest {
 
     @Ignore
     @Test
-    public void testCatalanOneThousandMixed() throws IOException {
+    public void testCatalanOneThousandMixed() {
 
         String inputString = "1";
 
@@ -214,7 +213,7 @@ public class DynamicParensTest {
 
     @Ignore
     @Test
-    public void testCatalanTwoThousand() throws IOException {
+    public void testCatalanTwoThousand() {
 
         String inputString = "1";
 
@@ -245,7 +244,7 @@ public class DynamicParensTest {
 
     @Ignore
     @Test
-    public void testCatalanTwoThousandFiveHundred() throws IOException {
+    public void testCatalanTwoThousandFiveHundred() {
 
         String inputString = "1";
 

@@ -32,9 +32,15 @@ public class Parens {
     private int operands = 0;
     private BigInteger[][] BinCoeff;
     private long[][] timestamps;
-    private int rows = 50;
     private boolean calculated = false;
 
+    /**
+     * Takes file input for multiple expressions, each separated
+     * by a newline.
+     * 
+     * @param argsv
+     * @throws IOException
+     */
     public static void main(String argsv[]) throws IOException {
 
         String newline = System.getProperty("line.separator");
@@ -254,19 +260,18 @@ public class Parens {
      * Output: An integer 1 iff l op r is true, 0 otherwise.
      **/
     private static BigInteger evaluate(char l, char r, char op) {
-        if ((op == 'a') && (l == '1' && r == '1')) {
-            return BigInteger.ONE;
+        switch(op) {
+            case 'a':
+                return (l == '1' && r == '1') ? BigInteger.ONE : BigInteger.ZERO;
+            case 'r':
+                return (l == '1' || r == '1') ? BigInteger.ONE : BigInteger.ZERO;
+            case 'n':
+                return !(l == '1' && r == '1')  ? BigInteger.ONE : BigInteger.ZERO;
+            case 'x':
+                return !(l == r)  ? BigInteger.ONE : BigInteger.ZERO;
+            default:
+                return BigInteger.ZERO;
         }
-        if ((op == 'r') && (l == '1' || r == '1')) {
-            return BigInteger.ONE;
-        }
-        if ((op == 'n') && !(l == '1' && r == '1')) {
-            return BigInteger.ONE;
-        }
-        if ((op == 'x') && !(l == r)) {
-            return BigInteger.ONE;
-        }
-        return BigInteger.ZERO;
     }
 
     /**
@@ -277,7 +282,7 @@ public class Parens {
      * possible parenthesizations there are in a boolean expression with n
      * operators ( n+1 ) operands.
      * 
-     * Output: A long integer of said value.
+     * Output: A BigInteger of said value.
      **/
     private BigInteger countParen(int n) {
         if (n == 0 || n == 1) {
@@ -294,7 +299,7 @@ public class Parens {
     /**
      * Inputs: Two integers, n and k
      * 
-     * Output: A long integer with value n choose k
+     * Output: A BigInteger with value n choose k
      **/
     private BigInteger DPBinomCoeffs(int n, int k) {
         BinCoeff = new BigInteger[n + 1][k + 1];

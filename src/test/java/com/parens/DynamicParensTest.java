@@ -21,7 +21,7 @@ public class DynamicParensTest {
     @Test
     public void testValidExpressionTwo() {
         parens = new Parens("1r1x1n0a0");
-        assertTrue(parens.calculate().equals(BigInteger.valueOf(8)));
+        assertTrue(parens.calculate(false).equals(BigInteger.valueOf(8)));
         /*
          * 1r(1x(1n(0a0))) = 1 1r(1x((1n0)a0)) = 1 1r((1x1)n(0a0)) = 1
          * 1r((1x(1n0))a0) = 1 1r(((1x1)n0)a0) = 1 (1r1)x((1n0)a0) = 1
@@ -88,49 +88,49 @@ public class DynamicParensTest {
     @Test
     public void testOperatorAND() {
         parens = new Parens("1a1");
-        assertTrue(parens.calculate().equals(BigInteger.ONE));
+        assertTrue(parens.calculate(false).equals(BigInteger.ONE));
         parens = new Parens("1a0");
-        assertTrue(parens.calculate().equals(BigInteger.ZERO));
+        assertTrue(parens.calculate(false).equals(BigInteger.ZERO));
         parens = new Parens("0a1");
-        assertTrue(parens.calculate().equals(BigInteger.ZERO));
+        assertTrue(parens.calculate(false).equals(BigInteger.ZERO));
         parens = new Parens("0a0");
-        assertTrue(parens.calculate().equals(BigInteger.ZERO));
+        assertTrue(parens.calculate(false).equals(BigInteger.ZERO));
     }
 
     @Test
     public void testOperatorOR() {
         parens = new Parens("1r1");
-        assertTrue(parens.calculate().equals(BigInteger.ONE));
+        assertTrue(parens.calculate(false).equals(BigInteger.ONE));
         parens = new Parens("1r0");
-        assertTrue(parens.calculate().equals(BigInteger.ONE));
+        assertTrue(parens.calculate(false).equals(BigInteger.ONE));
         parens = new Parens("0r1");
-        assertTrue(parens.calculate().equals(BigInteger.ONE));
+        assertTrue(parens.calculate(false).equals(BigInteger.ONE));
         parens = new Parens("0r0");
-        assertTrue(parens.calculate().equals(BigInteger.ZERO));
+        assertTrue(parens.calculate(false).equals(BigInteger.ZERO));
     }
 
     @Test
     public void testOperatorXOR() {
         parens = new Parens("1x1");
-        assertTrue(parens.calculate().equals(BigInteger.ZERO));
+        assertTrue(parens.calculate(false).equals(BigInteger.ZERO));
         parens = new Parens("1x0");
-        assertTrue(parens.calculate().equals(BigInteger.ONE));
+        assertTrue(parens.calculate(false).equals(BigInteger.ONE));
         parens = new Parens("0x1");
-        assertTrue(parens.calculate().equals(BigInteger.ONE));
+        assertTrue(parens.calculate(false).equals(BigInteger.ONE));
         parens = new Parens("0x0");
-        assertTrue(parens.calculate().equals(BigInteger.ZERO));
+        assertTrue(parens.calculate(false).equals(BigInteger.ZERO));
     }
 
     @Test
     public void testOperatorNAND() {
         parens = new Parens("1n1");
-        assertTrue(parens.calculate().equals(BigInteger.ZERO));
+        assertTrue(parens.calculate(false).equals(BigInteger.ZERO));
         parens = new Parens("1n0");
-        assertTrue(parens.calculate().equals(BigInteger.ONE));
+        assertTrue(parens.calculate(false).equals(BigInteger.ONE));
         parens = new Parens("0n1");
-        assertTrue(parens.calculate().equals(BigInteger.ONE));
+        assertTrue(parens.calculate(false).equals(BigInteger.ONE));
         parens = new Parens("0n0");
-        assertTrue(parens.calculate().equals(BigInteger.ONE));
+        assertTrue(parens.calculate(false).equals(BigInteger.ONE));
     }
 
     @Test
@@ -140,7 +140,7 @@ public class DynamicParensTest {
             inputString += "a1";
         }
         parens = new Parens(inputString);
-        BigInteger truths = parens.calculate();
+        BigInteger truths = parens.calculate(false);
         /*
          * 200! / (101! * 100!)
          */
@@ -165,7 +165,7 @@ public class DynamicParensTest {
             inputString += "a1";
         }
         parens = new Parens(inputString);
-        BigInteger truths = parens.calculate();
+        BigInteger truths = parens.calculate(false);
         /*
          * the 1000th catalan 2000! / (1001! * 1000!) 7.25min | ~435sec
          */
@@ -194,7 +194,7 @@ public class DynamicParensTest {
             }
         }
         parens = new Parens(inputString);
-        BigInteger truths = parens.calculate();
+        BigInteger truths = parens.calculate(false);
         /*
          * roughly 69.46% of the 1000th Catalan. (2000! / (1001! * 1000!)) *
          * 0.6946 = ~ the number of true parenthesizations of
@@ -221,7 +221,7 @@ public class DynamicParensTest {
             inputString += "a1";
         }
         parens = new Parens(inputString);
-        BigInteger truths = parens.calculate();
+        BigInteger truths = parens.calculate(false);
         /*
          * 4000! / (2001! * 2000!) ~1500000ms | 25min
          */
@@ -242,8 +242,8 @@ public class DynamicParensTest {
 
     }
 
-    @Ignore
     @Test
+    @Ignore
     public void testCatalanTwoThousandFiveHundred() {
 
         String inputString = "1";
@@ -252,7 +252,7 @@ public class DynamicParensTest {
             inputString += "a1";
         }
         parens = new Parens(inputString);
-        BigInteger truths = parens.calculate();
+        BigInteger truths = parens.calculate(false);
         /*
          * the 2500th Catalan. (5000! / (2501! * 2500!)) 7783162ms | ~2h9m
          */
@@ -275,5 +275,42 @@ public class DynamicParensTest {
                                 + "4831183677646245242650458819337600800010903760047699048081828326514477425505277747170597044092916320")));
 
     }
+    
+    @Test
+    @Ignore
+    public void testCatalanThreeThousand() {
 
+        String inputString = "1";
+
+        for (int i = 1; i <= 3000; i++) {
+            inputString += "a1";
+        }
+        parens = new Parens(inputString);
+        BigInteger truths = parens.calculate(true);
+        /*
+         * the 3000th Catalan. (6000! / (3001! * 3000!)) 30,807,043 ms | ~8h30m
+         */
+        assertTrue(truths
+                .equals(new BigInteger(
+                        "51946265291954288172136512301117997531010293760494026671938589260688011076531671889139507149751422912" +
+                        	"642992597605567925122312807474903783540103644915378708599861508007947202451067399543746555620291398" +
+                        	"866220147648172455441958835246078824860087084575788284613881067672553856310788303018126659917219540" +
+                        	"619467426217849421815810662818508464031813366088066941087963142216590158233898057337892696450055616" +
+                        	"938540473610027012866976178989243250345409173794898720391680052804962563194385306994663076830868911" +
+                        	"769108564583291818792555650607276114767543842988284360470219342061375373266269425939858332750930592" +
+                        	"587795807619250877977460067155005962544922076697232342604856957387074264613868233066527197074173702" +
+                        	"635104100209472557002165804386805013387046497801086233622734739422840220359251950944071195626005690" +
+                        	"136752842711116129636996507101562206236990695392882516054249931602926084890198170552054604073557345" +
+                        	"683816127814320504628727400198520905150179105706486077792461471288089584488966106290681065122799679" +
+                        	"569920070568916704149129513267890536250673944259694104946876893451538768668521672542963056938843384" +
+                        	"318131052590591507935342519776057603638279330145192325355463245776469653323923079237437155104982977" +
+                        	"058678431760179482266869976252488027613168925040504223766558732482934573847382612811067192919228379" +
+                        	"978196248606501698222260213840201457202439892158663793046387213323225955587200814343710454107597558" +
+                        	"510553970887038726777417363065619926979966869294928125498853841234293187635074300525615508339585529" +
+                        	"367422274288772944173640644146087110031978859949494819998031871316754533428381266043184071356122665" +
+                        	"352510808218171887920784639949160304689706618669208600090055159896365672159474887362920746468920607" +
+                        	"670689715285964780801313040721583420795236689032242254244060127869914222499072745785242590560585619" +
+                        	"00439043252745600")));
+
+    }
 }

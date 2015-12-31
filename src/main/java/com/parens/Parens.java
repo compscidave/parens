@@ -64,7 +64,7 @@ public class Parens {
         try {
             String inputString = "1";
 
-            for (int i = 1; i <= 100; i++) {
+            for (int i = 1; i <= 3000; i++) {
                 inputString += "a1";
             }
             inOut.write(inputString);
@@ -73,7 +73,7 @@ public class Parens {
             Parens parens = new Parens(inputString);
             operands = ((parens.getExpression().length() - 1) / 2) + 1;
 
-            BigInteger truths = parens.calculate();
+            BigInteger truths = parens.calculate(false);
 
             out.write(parens.getExpression() + ":" + truths + newline);
             // This output creates a tabular view of execution times for each
@@ -122,17 +122,53 @@ public class Parens {
         return Beta[0][operands - 1];
     }
 
-    public BigInteger calculate() {
+    public BigInteger calculate(boolean outputToFile) {
         if (calculated) {
             return getTotalTruths();
         } else {
             calculateParenthesizations(0, operands - 1);
             calculated = true;
+            if(outputToFile) {
+            	try {
+					print();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+            }
             return getTotalTruths();
         }
     }
 
-    /**
+    private void print() throws IOException {
+        BufferedWriter out = new BufferedWriter(new FileWriter(
+                "src//main//resources//output"));
+
+        String newline = System.getProperty("line.separator");
+        try {
+
+            out.write(exp + ":" + getTotalTruths() + newline);
+ 
+            for (int i = 0; i < operands; i++) {
+                out.write(newline);
+                long rowSum = 0;
+                for (int j = 0; j < operands; j++) {
+                    out.write("[" + timestamps[i][j] + "]");
+                    if (j != operands - 1) {
+                        rowSum += timestamps[i][j];
+                    } else {
+                        out.write("[" + rowSum + "]");
+                    }
+                }
+            }
+            out.close();
+        } catch (IOException e) {
+
+        } finally {
+            out.close();
+        }
+	}
+
+	/**
      * A boolean expression is of the form arg_0 op_0 arg_1 op_1 ... op_n-1
      * arg_n
      * 
@@ -216,14 +252,16 @@ public class Parens {
                     BigInteger iAddOneTokParens = countParen(k - (i + 1));
 
                     if (op == 'r') {
-                        // 1 r 1 = 1
-                        Beta[j][k] = Beta[j][k].add(Beta[j][i]
-                                .multiply(Beta[i + 1][k])
-                                // 1 r 0 = 1
-                                .add(Beta[j][i].multiply(iAddOneTokParens
+                        //some simple math can be used to derive the solution for Beta[j][k].
+                        Beta[j][k] = Beta[j][k]
+                                // 1 r 1 = 1
+                                .add(Beta[j][i]
+                                    .multiply(Beta[i + 1][k])
+                                    // 1 r 0 = 1
+                                    .add(Beta[j][i].multiply(iAddOneTokParens
                                         .subtract(Beta[i + 1][k])))
-                                // 0 r 1 = 1
-                                .add((jToiParens.subtract(Beta[j][i]))
+                                    // 0 r 1 = 1
+                                    .add((jToiParens.subtract(Beta[j][i]))
                                         .multiply(Beta[i + 1][k])));
                     } else if (op == 'x') {
                         // 0 x 1 = 1
